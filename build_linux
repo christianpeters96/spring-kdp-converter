@@ -1,0 +1,7 @@
+#!/bin/bash
+(cd src/main/webapp && npm i && gulp)
+mvn clean package
+rm -r dist/
+mkdir dist
+mv target/*.jar dist/app.jar
+echo "app.fontPath=/opt/fonts" > dist/application.properties

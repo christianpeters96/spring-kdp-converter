@@ -1,0 +1,16 @@
+<page-title data-heading="Settings" data-sub="Set up your page"></page-title>
+<page-body>
+    <page-widget data-heading="Font-Cache">
+        <div>
+            <div class="col-md-2 text-right"><b>Status:</b></div>
+            <div class="col-md-10"><span ng-bind-html="$ctrl.status"></span></div>
+        </div>
+        <div class="col-md-12" style="padding-top:25px;">
+            <div style="float:right">
+                <button class="btn btn-default" ng-click="$ctrl.saveCache()">Save Fonts</button>
+                <button class="btn btn-default" ng-click="$ctrl.reloadFonts()">(Re-)Load Fonts</button>
+                <button class="btn btn-danger" ng-click="$ctrl.deleteCache()">Delete Font File</button>
+            </div>
+        </div>
+    </page-widget>
+</page-body>

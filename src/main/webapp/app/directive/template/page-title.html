@@ -1,0 +1,16 @@
+<section class="content-header">
+    <h1>
+        {{heading}}
+        <small>{{sub}}</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li ng-repeat="bc in bcList">
+            <a ui-sref="{{bc.state}}">
+                <span ng-if="bc.icon"><span class="fa fa-{{bc.icon}}"></span>&nbsp;</span>
+                {{bc.title}}
+            </a>
+        </li>
+<!--        <li><a href="#"><i class="fa fa-wrench"></i> Tools</a></li>-->
+<!--        <li class="active">Image to KDP</li>-->
+    </ol>
+</section>

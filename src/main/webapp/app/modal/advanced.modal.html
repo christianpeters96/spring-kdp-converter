@@ -1,0 +1,177 @@
+<div class="modal-header">
+    <h3 class="pull-left modal-title">Advanced KDP settings</h3>
+    <div class="pull-right">
+        <button class="btn btn-xs btn-default" type="button" ng-click="closeModal()">Cancel</button>
+        <button class="btn btn-xs btn-primary" type="button" ng-click="confirmSettings()">Save</button>
+    </div>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <!--<div class="col-md-12">-->
+        <!--<div class="box box-primary">-->
+        <!--<div class="box-header with-border">-->
+        <!--<h3 class="box-title">Image Preview</h3>-->
+        <!--</div>-->
+        <!--<div class="box-body">-->
+        <!--<img ng-src="{{image}}" width="{{imageWidth}}px" height="{{imageHeight}}px"/>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+
+        <!-- begin pdf file name -->
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">General</h3>
+                </div>
+                <div class="box-body">
+                    <div class="form-group">
+                        <label class="control-label">Book title:</label>
+                        <input type="text" class="form-control" placeholder="Book title" ng-model="bookTitle"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Document color: </label>
+                        <select chosen class="form-control"
+                                ng-model="bgColor"
+                                ng-change="changedDocumentColor()"
+                                ng-options="col as col.name for col in colors track by col.name">
+                            <option disabled></option>
+                        </select>
+                        <div ng-if="useCustomBgColor" style="margin:6px 0;">
+                            <color-picker ng-model="bgColor.hex" options="colorPickerOptions"></color-picker>
+                        </div>
+                    </div>
+                    <div class="checkbox">
+                        <label for="modalDocColGlobal"><input id="modalDocColGlobal" type="checkbox" class="checkbox" ng-model="globalBgColor"/>Update document color globally</label>
+                    </div>
+                    <span style="color:orange;" ng-if="globalBgColor"><b>Warning:</b> You will overwrite all document colors in the list</span>
+                </div>
+            </div>
+        </div>
+        <!-- end pdf file name -->
+        <!-- begin book title -->
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Font settings</h3>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-6">
+                        <div>
+                            <!--<div class="form-group">-->
+                            <!--<label class="control-label" for="searchQueryInput">Search Font:</label>-->
+                            <!--<input type="text" class="form-control" id="searchQueryInput" ng-change="$ctrl.delayedSearch()" ng-model="$ctrl.searchQuery" autocomplete="off"/>-->
+                            <!--</div>-->
+                            <div class="result">
+                                <label class="control-label" for="selectFontFamily">Font family:</label>
+                                <select chosen id="selectFontFamily"
+                                        class="form-control"
+                                        size="{{$ctrl.fontList.length}}"
+                                        ng-model="selectedFont"
+                                        ng-options="item as item.name for item in $ctrl.fontList track by item.name">
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin:14px 0;"></div>
+                        <div>
+                            <div class="form-group">
+                                <label class="control-label" for="selectStyle">Select Style:</label>
+                                <select chosen id="selectStyle"
+                                        class="form-control"
+                                        size="{{selectedFont.styles.length}}"
+                                        ng-model="selectedFontStyle"
+                                        ng-options="style as style for style in selectedFont.styles">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="checkbox">
+                            <label for="modalSetGlobal"><input id="modalSetGlobal" type="checkbox" class="checkbox" ng-model="globalFontSettings"/>Update globally</label>
+                        </div>
+                        <span style="color:orange;" ng-if="globalFontSettings"><b>Warning:</b> You will overwrite all font settings in the list</span>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Font color: </label>
+                            <select chosen class="form-control"
+                                    ng-model="font.color"
+                                    ng-change="changedFontColor()"
+                                    ng-options="col as col.name for col in colors track by col.name">
+                                <option disabled></option>
+                            </select>
+                            <div ng-if="useCustomFontColor" style="margin:6px 0;">
+                                <color-picker ng-model="font.color.hex" options="colorPickerOptions"></color-picker>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="advancedSettingsFontSize">Font size (pt): </label>
+                            <input id="advancedSettingsFontSize" class="form-control" type="number" min="6" max="16" ng-model="font.size" placeholder="Font size"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end book title -->
+        <!-- begin pdf file name -->
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Images</h3>
+                </div>
+                <div class="box-body">
+                    <!-- begin file upload -->
+                    <div class="form-group col-md-4">
+                        <label class="btn btn-default">
+                            <b>Upload more images</b>
+                            <input type="file" file-model="$ctrl.imageForm.file" hidden>
+                        </label>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label>Image type: </label>
+                        <select class="form-control" ng-model="$ctrl.imageForm.type">
+                            <option value="Front Cover">Front Cover</option>
+                            <option value="Back Cover">Back Cover</option>
+                            <option value="Overall">Overall</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success" ng-click="$ctrl.uploadNewImage()">Upload</button>
+                    <!-- end file upload -->
+                    <hr style="border-color:rgba(0,0,0,0.25);"/>
+                    <!-- begin file preview -->
+                    <div class="image-preview">
+                        <div class="col-md-4">
+                            <div class="box box-default box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Front Cover (Default)</h3>
+                                </div>
+                                <div class="box-body">
+                                    <img src="{{$ctrl.imageSrc}}" width="{{$ctrl.previewSize.width}}" height="{{$ctrl.previewSize.height}}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" ng-repeat="$image in extraFiles">
+                            <div class="box box-primary box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">{{ $image.type }}</h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove" ng-click="$ctrl.removeImage($image.id)"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    <img src="{{$image.base64}}" width="{{$image.pv.width}}" height="{{$image.pv.height}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end file preview -->
+                </div>
+            </div>
+        </div>
+        <!-- end pdf file name -->
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="closeModal()">Cancel</button>
+    <button class="btn btn-primary" type="button" ng-click="confirmSettings()">Save</button>
+</div>

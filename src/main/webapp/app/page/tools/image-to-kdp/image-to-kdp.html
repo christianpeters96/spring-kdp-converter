@@ -1,0 +1,80 @@
+<page-title data-heading="Image to KDP" data-sub="Converts image files to a 6 x 9 KDP file" />
+<page-body>
+    <page-box data-heading="Add Files">
+        <div class="form-group" ng-hide="true">
+            <input type="file" class="form-control file-uploader" file-model="$ctrl.files" onchange="angular.element(this).controller().uploadFiles()" multiple/>
+        </div>
+        <div  class="form-group">
+            <button class="btn btn-success" ng-click="$ctrl.selectFiles()"><span class="fa fa-upload"></span> Upload files</button>
+        </div>
+    </page-box>
+    <page-box data-heading="Files">
+        <button class="btn btn-default" ng-click="$ctrl.convertMultiple()" ng-disabled="!$ctrl.canGenerateMultiple || $ctrl.generating">Generate Multiple PDF Files</button>
+        <div class="checkbox-inline" ng-if="$ctrl.canGenerateMultiple" style="margin-left:10px;">
+            <label style="font-weight: 100;"><input type="checkbox" ng-model="$ctrl.useSeparatedFolders"> Create separated folders</label>
+        </div>
+        <p class="multi-gen-hint" ng-if="$ctrl.canGenerateMultiple == false">You can generate multiple (checked) files when at least 2 are checked and there is a title set</p>
+        <div ng-if="$ctrl.generating">
+            <div style="margin:6px;"></div>
+            <div class="progress">
+                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{$ctrl.uploadStatus}}" aria-valuemin="0" aria-valuemax="100" style="width:{{$ctrl.uploadStatus}}%;">
+                    <span ng-if="$ctrl.generationState == 'Uploading'">{{$ctrl.generationState}} ({{$ctrl.uploadStatus}}%)</span>
+                    <span ng-if="$ctrl.generationState != 'Uploading'">{{$ctrl.generationState}} ...</span>
+                </div>
+            </div>
+        </div>
+        <div style="margin:6px;"></div>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th style="width:30px;">#</th>
+                    <th>Image</th>
+                    <th>Book title</th>
+                    <th>File Suffix</th>
+                    <th>Font</th>
+                    <th>Document color</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="$ctrl.uploadedFiles.length !== 0" ng-repeat="$image in $ctrl.uploadedFiles">
+                    <td ng-click="$image.check()">
+                        <input type="checkbox" ng-model="$image.checked" tabIndex="-1"/>
+                    </td>
+                    <td ng-click="$image.check()" class="td-dark">
+                        <img ng-src="{{$image.content}}" width="{{$image.preview.width}}px" height="{{$image.preview.height}}px" /> {{$image.name}}
+                    </td>
+                    <td>
+                        <span>
+                            <input type="text" class="form-control book-title" ng-change="$ctrl.checkUploadedFiles();" ng-model="$image.bookTitles[0]" />
+                            <button class="book-title-remove" title="Add" ng-click="$ctrl.addBookTitle($image, 0)" tabIndex="-1"><span class="fa fa-plus"></span></button>
+                        </span>
+                        <span ng-repeat="$bookTitle in $image.bookTitles track by $index" ng-if="$index > 0" style="clear:both;">
+                            <br/>
+                            <input type="text" class="form-control book-title" ng-change="$ctrl.checkUploadedFiles();" ng-model="$image.bookTitles[$index]" />
+                            <button class="book-title-add" title="Add" ng-click="$ctrl.addBookTitle($image, $index)" tabIndex="-1"><span class="fa fa-plus"></span></button>
+                            <button class="book-title-remove" title="Remove" ng-click="$ctrl.removeBookTitle($image, $index)" tabIndex="-1"><span class="fa fa-minus"></span></button>
+                        </span>
+                    </td>
+                    <td style="max-width:50px;">
+                        <a ng-if="$image.fileSuffix === undefined" href="#" ng-click="$ctrl.enableSuffix($event, $image)" tabIndex="-1">Add suffix</a>
+                        <input ng-if="$image.fileSuffix !== undefined" class="form-control" ng-model="$image.fileSuffix" tabIndex="-1"/>
+                    </td>
+                    <td>{{ $image.font.family }}<br/>{{ $image.font.style }} - {{ $image.font.color.name }} ({{ $image.font.size }}pt)</td>
+                    <td>{{ $image.bgColor.name }}</td>
+                    <td>
+                        <button class="btn btn-xs btn-default" ng-click="$image.advancedSettings()" tabIndex="-1">
+                            <span class="fa fa-download"></span> Settings
+                        </button>
+                        <button class="btn btn-xs btn-primary" ng-click="$ctrl.convert($image.identifier)" ng-disabled="$image.bookTitle.length==0" tabIndex="-1">
+                            <span class="fa fa-download"></span> Generate PDF
+                        </button>
+                        <button class="btn btn-xs btn-danger" ng-click="$ctrl.remove($image.identifier)" tabIndex="-1">
+                            <span class="fa fa-remove"></span> Delete
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </page-box>
+</page-body>
